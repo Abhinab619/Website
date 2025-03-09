@@ -10,7 +10,7 @@ export default function App() {
     setMessage("");
   
     try {
-      const response = await fetch("https://website-2n5i.onrender.com/chat", {
+      const response = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: message }),

@@ -8,6 +8,7 @@ from langchain.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain import hub
 from langchain.agents import create_tool_calling_agent, AgentExecutor
+import os
 
 app = FastAPI()
 
@@ -24,9 +25,12 @@ app.add_middleware(
 class Message(BaseModel):
     text: str
 
+# Get the absolute path of the current script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Initialize Vector Store & Retriever
 vectorstore = Chroma(
-    persist_directory=r"C:\Users\HP\Desktop\Projects 2k24\NS Apps- Wooorkkk\YOJNA_Query_classification\USING RAG\data_store",
+persist_directory = os.path.join(BASE_DIR, "data_store"),
     embedding_function = GoogleGenerativeAIEmbeddings(
     model="models/text-embedding-004", 
     google_api_key='AIzaSyBgdymDNQMdnSEad-xYapzh1hS3F6wmxfE')
@@ -35,7 +39,7 @@ vectorstore = Chroma(
 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.7})
 
 retriever_tool = create_retriever_tool(
-    retriever=retriever, name="Udhami_Yojna", description="Information on this Yojna"
+    retriever=retriever, name="Udhami_Yojna", description="About This scheme"
 )
 
 # Direct Gemini Tool
