@@ -27,7 +27,9 @@ class Message(BaseModel):
 # Initialize Vector Store & Retriever
 vectorstore = Chroma(
     persist_directory=r"C:\Users\HP\Desktop\Projects 2k24\NS Apps- Wooorkkk\YOJNA_Query_classification\USING RAG\data_store",
-    embedding_function=GoogleGenerativeAIEmbeddings(model="models/text-embedding-004"),
+    embedding_function = GoogleGenerativeAIEmbeddings(
+    model="models/text-embedding-004", 
+    google_api_key='AIzaSyBgdymDNQMdnSEad-xYapzh1hS3F6wmxfE')
 )
 
 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.7})
@@ -37,7 +39,9 @@ retriever_tool = create_retriever_tool(
 )
 
 # Direct Gemini Tool
-chat = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
+chat = ChatGoogleGenerativeAI(model="gemini-1.5-pro",
+                                  google_api_key='AIzaSyBgdymDNQMdnSEad-xYapzh1hS3F6wmxfE'
+)
 
 @tool
 def direct_llm_answer(query: str) -> str:
