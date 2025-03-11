@@ -35,6 +35,13 @@ persist_directory = os.path.join(BASE_DIR, "data_store"),
     model="models/text-embedding-004", 
     google_api_key='AIzaSyBgdymDNQMdnSEad-xYapzh1hS3F6wmxfE')
 )
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+data_store_path = os.path.join(BASE_DIR, "data_store")
+
+print("Absolute Path of data_store:", data_store_path)
+
 
 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.7})
 
