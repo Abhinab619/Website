@@ -83,20 +83,19 @@ MAX_MEMORY_SIZE = 5  # Clear memory after 10 interactions
 
 @app.post("/chat")
 def chat_with_model(msg: Message):
-    global interaction_count
+    global interaction_count, memory  # Ensure we can modify memory
     
     # Reset memory if it gets too large
     if interaction_count >= MAX_MEMORY_SIZE:
-        memory.clear()
-        interaction_count = 0
-    
+        memory.clear()  # Clears stored history
+        memory = ConversationSummaryMemory(llm=chat, memory_key="chat_history", return_messages=True)  # Reinitialize memory
+        interaction_count = 0  # Reset counter
+
     response = agent_executor.invoke({"input": msg.text})
-    
     interaction_count += 1  # Increase interaction count
     
     return {
         "response": response.get("output", "No response generated"),
         "intermediate_steps": response.get("intermediate_steps", [])
     }
-
 
