@@ -60,6 +60,14 @@ def direct_llm_answer(query: str) -> str:
     response = chat.invoke(query)
     return response
 
+
+# Adding a memory for context Retention
+
+from langchain.memory import ConversationSummaryMemory
+memory = ConversationSummaryMemory(llm=chat, memory_key="chat_history",return_messages=True)
+
+
+
 # Define tools
 tools = [retriever_tool, direct_llm_answer]
 
@@ -68,7 +76,7 @@ chat_prompt_template = hub.pull("hwchase17/openai-tools-agent")
 # Create tool calling agent
 agent = create_tool_calling_agent(llm=chat, tools=tools, prompt=chat_prompt_template)
 
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_intermediate_steps=True)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_intermediate_steps=True, memory = memory)
 
 @app.post("/chat")
 def chat_with_model(msg: Message):
