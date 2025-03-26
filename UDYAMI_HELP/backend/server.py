@@ -46,7 +46,7 @@ print("Absolute Path of data_store:", data_store_path)
 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.7})
 
 retriever_tool = create_retriever_tool(
-    retriever=retriever, name="Udhami_Yojna", description="Answer the question by matching it from the document, If talked about scheme or Yojna it means Udyami Yojna and its Parts"
+    retriever=retriever, name="Udhami_Yojna", description="Retrieves relevant information from stored documents sumarizing all the inforamtion without missing any"
 )
 
 # Direct Gemini Tool
