@@ -79,7 +79,7 @@ agent = create_tool_calling_agent(llm=chat, tools=tools, prompt=chat_prompt_temp
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, return_intermediate_steps=True, memory = memory)
 
 interaction_count = 0
-MAX_MEMORY_SIZE = 5  # Clear memory after 10 interactions
+MAX_MEMORY_SIZE = 5  # Clear memory after 5 interactions
 
 @app.post("/chat")
 def chat_with_model(msg: Message):
@@ -87,8 +87,16 @@ def chat_with_model(msg: Message):
     
     # Reset memory if it gets too large
     if interaction_count >= MAX_MEMORY_SIZE:
+        print('Memory Reset')
         memory.clear()  # Clears stored history
         memory = ConversationSummaryMemory(llm=chat, memory_key="chat_history", return_messages=True)  # Reinitialize memory
+        agent_executor = AgentExecutor(
+            agent=agent,
+            tools=tools,
+            verbose=True,
+            return_intermediate_steps=True,
+            memory=memory
+        )
         interaction_count = 0  # Reset counter
 
     response = agent_executor.invoke({"input": msg.text})
